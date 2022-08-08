@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./newExpenses.css";
-function NewExpenses() {
+function NewExpenses(props) {
   const [newTitle, setNewTitle] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newAmount, setNewAmount] = useState("");
@@ -14,13 +14,36 @@ function NewExpenses() {
   const dateChangeHandler = (e) => {
     setNewDate(e.target.value);
   };
+  const submitHandler=(e)=>{
+    e.preventDefault();
+    const expenseData={
+      title:newTitle,
+      amount:newAmount,
+      date:new Date(newDate)
+    };
+    saveExpenseDataHandler(expenseData)
+    setNewTitle('')
+    setNewAmount('')
+    setNewDate('')
+
+  }
+  const saveExpenseDataHandler=(newExpenseData)=>{
+    const expenseData={
+      ...newExpenseData,
+      id:Math.random().toString()
+    };
+    
+    props.onAddExpense(expenseData);
+
+  }
+   
   return (
     <div className="new-expense">
-      <form>
+      <form onSubmit={submitHandler } >
         <div className="new-expense__controls">
           <div className="new-expense__control">
             <label>Title</label>
-            <input type="text" onChange={titleChangeHandler} />
+            <input type="text"  value={newTitle} onChange={titleChangeHandler} />
           </div>
           <div className="new-expense__control">
             <label>Amount</label>
@@ -28,6 +51,7 @@ function NewExpenses() {
               type="number"
               min="1"
               step="1"
+              value={newAmount}
               onChange={amountChangeHandler}
             />
           </div>
@@ -37,12 +61,13 @@ function NewExpenses() {
               type="date"
               min="2019-01-01"
               max="2024-12-12"
+              value={newDate}
               onChange={dateChangeHandler}
             />
           </div>
         </div>
         <div className="new-expense__actions">
-          <button type="submit">Add Expense</button>
+          <button type="submit" onSubmit={saveExpenseDataHandler}>Add Expense</button>
         </div>
       </form>
     </div>
