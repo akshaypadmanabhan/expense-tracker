@@ -4,6 +4,7 @@ function NewExpenses(props) {
   const [newTitle, setNewTitle] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newAmount, setNewAmount] = useState("");
+  const [editing,setEditing]=useState(false)
 
   const titleChangeHandler = (e) => {
     setNewTitle(e.target.value);
@@ -37,9 +38,16 @@ function NewExpenses(props) {
 
   }
    
+  const editingHandler=()=>{
+    setEditing(true)
+  }
+  const stopEditinghandler=()=>{
+    setEditing(false)
+  }
   return (
     <div className="new-expense">
-      <form onSubmit={submitHandler } >
+      {! editing && <button onClick={editingHandler} >Add Expenses</button>}
+      {editing && <form onSubmit={submitHandler } >
         <div className="new-expense__controls">
           <div className="new-expense__control">
             <label>Title</label>
@@ -63,13 +71,15 @@ function NewExpenses(props) {
               max="2024-12-12"
               value={newDate}
               onChange={dateChangeHandler}
+              required
             />
           </div>
         </div>
         <div className="new-expense__actions">
+          <button type="button" onClick={stopEditinghandler}>Cancel</button>
           <button type="submit" onSubmit={saveExpenseDataHandler}>Add Expense</button>
         </div>
-      </form>
+      </form>}
     </div>
   );
 }
